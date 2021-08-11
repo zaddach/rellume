@@ -5,9 +5,11 @@ project('rellume', ['cpp'], meson_version: '>=0.49',
             'cpp_std=c++17',
         ])
 
-add_project_arguments(['-Wno-unused-parameter', '-Wshadow=local'], language: 'cpp')
+add_project_arguments(['-Wno-unused-parameter', '-Wshadow=local','-fvisibility=hidden'], language: 'cpp')
+add_project_link_arguments(['-fvisibility=hidden'], language: 'cpp')
 
-libllvm = dependency('llvm', version: ['>=9', '<12'])
+
+libllvm = dependency('llvm', version: ['>=9', '<12'], static: true)
 add_project_arguments(['-DLL_LLVM_MAJOR='+libllvm.version().split('.')[0]], language: 'cpp')
 
 architectures = []
@@ -38,7 +40,7 @@ librellume = declare_dependency(include_directories: rellume_inc,
                                 sources: [cpustruct_pub])
 
 subdir('tests')
-subdir('examples')
+#subdir('examples')
 
 pkg = import('pkgconfig')
 pkg.generate(librellume_lib,
